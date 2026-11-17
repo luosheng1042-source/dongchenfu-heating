@@ -213,6 +213,19 @@
         padding: 2px 5px;
         border-radius: 999px;
       }
+      .cell .pend {
+        position: absolute;
+        top: -7px;
+        right: 2px;
+        background: var(--dev);
+        color: var(--panel);
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1;
+        padding: 2px 5px;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
       .b-split {
         grid-column: 2 / -1;
         display: flex;
@@ -480,7 +493,7 @@
   <body>
     <main class="wrap">
       <h1>东宸府供暖统计结果</h1>
-      <p class="meta">截至 2026-11-17 19:04</p>
+      <p class="meta">截至 2026-11-17 19:59</p>
 
       <nav class="toc" aria-label="六栋目录">
         <h2>全小区六栋都在这页 · 点楼号直达</h2>
@@ -490,7 +503,7 @@
           <a href="#building-2">2 号楼<span>60 户 · 未售 6 套</span></a>
           <a href="#building-3">3 号楼<span>72 户 · 未售 5 套</span></a>
           <a href="#building-4">4 号楼<span>36 户 · 未售 3 套</span></a>
-          <a href="#building-5">5 号楼<span>96 户 · 未售 16 套 · 已报暖 19 户</span></a>
+          <a href="#building-5">5 号楼<span>96 户 · 未售 16 套 · 已报暖 29 户</span></a>
           <a href="#building-6">6 号楼<span>125 户 · 未售 19 套</span></a>
         </div>
       </nav>
@@ -500,18 +513,18 @@
         <p class="comm-note">1–6 号楼共 <strong>449 户</strong>：已售 398 户、未售 51 套。整体过半线 ＝ <strong>225 户</strong>。</p>
         <div class="zone-head" style="margin-top:14px">
           <h2 style="font-size:15px">全小区 · 离过半线还差多少</h2>
-          <div class="count">19<span class="of"> / 449 户</span></div>
+          <div class="count">29<span class="of"> / 449 户</span></div>
         </div>
-        <p class="stats">已报暖 <span class="pct">4.2%</span> · 过半线 225 户 · <span class="gap">还差 206 户</span></p>
+        <p class="stats">已报暖 <span class="pct">6.5%</span> · 过半线 225 户 · <span class="gap">还差 196 户</span></p>
         <div class="bar-zone">
-          <div class="bar" role="img" aria-label="全小区共449户，已报暖19户占4.2%，未售51套为虚线段，开发商担下后合计70户占15.6%，过半线225户在50%处">
-            <div class="fill" style="width:4.2%"></div>
-            <div class="dash" style="left:4.2%;width:11.4%"></div>
+          <div class="bar" role="img" aria-label="全小区共449户，已报暖29户占6.5%，未售51套为虚线段，开发商担下后合计80户占17.8%，过半线225户在50%处">
+            <div class="fill" style="width:6.5%"></div>
+            <div class="dash" style="left:6.5%;width:11.4%"></div>
             <div class="target-line"></div>
             <div class="target-tag">过半线 225 户</div>
           </div>
         </div>
-        <p class="bar-note">虚线段：未售 51 套，开发商担下后合计 70 户（15.6%）。</p>
+        <p class="bar-note">虚线段：未售 51 套，开发商担下后合计 80 户（17.8%）。</p>
         <p class="bar-note">其余五栋报暖还在统计中（问卷回收后更新此条）。</p>
       </section>
 
@@ -1194,7 +1207,7 @@
           <span class="item"><span class="sw sw-idle"></span>已售未报</span>
           <span class="item"><span class="sw sw-pass"></span>已达标区块（实报 ≥50%）</span>
         </div>
-        <div class="board" role="img" aria-label="5号楼全景格子图：橙红色为已报暖共19户，蓝色为未售开发商持有共16套，浅灰为已售未报">
+        <div class="board" role="img" aria-label="5号楼全景格子图：橙红色为已报暖共29户，蓝色为未售开发商持有共16套，浅灰为已售未报；1单元1401与2302房号待确认">
           <div></div><div></div>
           <div class="b-unit" style="grid-column:3/5">1 单元</div>
           <div></div>
@@ -1223,19 +1236,19 @@
           <div class="cell dev">2402</div>
           <div class="b-floor">23</div>
           <div class="cell">2301</div>
-          <div class="cell">2302</div>
+          <div class="cell hot">2302<span class="pend">房号待确认</span></div>
           <div></div>
           <div class="cell">2301</div>
           <div class="cell dev">2302</div>
           <div class="b-floor">22</div>
-          <div class="cell">2201</div>
+          <div class="cell hot">2201</div>
           <div class="cell">2202</div>
           <div></div>
           <div class="cell">2201</div>
           <div class="cell dev">2202</div>
           <div class="b-floor">21</div>
-          <div class="cell">2101</div>
-          <div class="cell">2102</div>
+          <div class="cell hot">2101</div>
+          <div class="cell hot">2102</div>
           <div></div>
           <div class="cell hot">2101</div>
           <div class="cell dev">2102</div>
@@ -1246,7 +1259,7 @@
           <div class="cell hot">2001</div>
           <div class="cell dev">2002</div>
           <div class="b-floor">19</div>
-          <div class="cell">1901</div>
+          <div class="cell hot">1901</div>
           <div class="cell">1902</div>
           <div></div>
           <div class="cell">1901</div>
@@ -1276,20 +1289,20 @@
           <div class="cell">1501</div>
           <div class="cell dev">1502</div>
           <div class="b-floor">14</div>
-          <div class="cell">1401</div>
+          <div class="cell hot">1401<span class="pend">房号待确认</span></div>
           <div class="cell">1402</div>
           <div></div>
           <div class="cell">1401</div>
           <div class="cell">1402</div>
           <div class="b-split"><span class="line"></span><span class="txt">高低区分界 · 14 楼起为高区</span><span class="line"></span></div>
           <div class="b-floor">13</div>
-          <div class="cell">1301</div>
-          <div class="cell">1302</div>
+          <div class="cell hot">1301</div>
+          <div class="cell hot">1302</div>
           <div></div>
           <div class="cell">1301</div>
           <div class="cell hot">1302</div>
           <div class="b-floor">12</div>
-          <div class="cell">1201</div>
+          <div class="cell hot">1201</div>
           <div class="cell">1202</div>
           <div></div>
           <div class="cell hot">1201</div>
@@ -1337,7 +1350,7 @@
           <div class="cell hot">501</div>
           <div class="cell hot">502</div>
           <div class="b-floor">4</div>
-          <div class="cell">401</div>
+          <div class="cell hot">401</div>
           <div class="cell">402</div>
           <div></div>
           <div class="cell hot">401</div>
@@ -1350,6 +1363,7 @@
           <div class="cell">302</div>
           <div class="block-bg" aria-hidden="true"><span class="pass-tag">已达标</span></div>
         </div>
+        <p class="board-note">注：1 单元 1401（问卷原填「5011401」）、2302（问卷原填「512302」）房号疑似拼接误填，已按报暖计入，房号待确认。2 单元 1301 登记不要供暖，只登记、不计入报暖数，格子图上不标已报暖。</p>
       </section>
 
       <section class="zone" aria-label="2单元低区">
@@ -1366,6 +1380,7 @@
           </div>
         </div>
         <p class="rooms"><span class="label">报暖房号：</span>301、401、402、501、502、601、602、801、802、902、1002、1201、1302</p>
+        <p class="rooms"><span class="label">不要供暖登记：</span>1301（1 户，只登记，不计入报暖数）</p>
       </section>
 
       <section class="zone" aria-label="2单元高区">
@@ -1390,37 +1405,38 @@
       <section class="zone" aria-label="1单元低区">
         <div class="zone-head">
           <h2>1 单元 · 低区<span class="floors">3–13 楼</span></h2>
-          <div class="count">1<span class="of"> / 22 户</span></div>
+          <div class="count">5<span class="of"> / 22 户</span></div>
         </div>
-        <p class="stats">已报暖 <span class="pct">4.5%</span> · 达标需 11 户 · <span class="gap">还差 10 户</span></p>
+        <p class="stats">已报暖 <span class="pct">22.7%</span> · 达标需 11 户 · <span class="gap">还差 6 户</span></p>
         <div class="bar-zone">
-          <div class="bar" role="img" aria-label="1单元低区报暖1户，共22户，占4.5%，未售1套占4.5%，加上未售合计9.1%，达标线50%">
-            <div class="fill" style="width:4.5%"></div>
-            <div class="ext" style="left:4.5%;width:4.5%"></div>
+          <div class="bar" role="img" aria-label="1单元低区报暖5户，共22户，占22.7%，未售1套占4.5%，加上未售合计27.3%，达标线50%">
+            <div class="fill" style="width:22.7%"></div>
+            <div class="ext" style="left:22.7%;width:4.5%"></div>
             <div class="target-line"></div>
             <div class="target-tag">达标线 50%</div>
           </div>
         </div>
-        <p class="bar-note">斜纹段：未售 1 套，(1＋1) / 22 ＝ 9.1%</p>
-        <p class="rooms"><span class="label">报暖房号：</span>801<span class="todo">（801 为业主本人）</span></p>
+        <p class="bar-note">斜纹段：未售 1 套，(5＋1) / 22 ＝ 27.3%</p>
+        <p class="rooms"><span class="label">报暖房号：</span>401、801<span class="todo">（801 为业主本人）</span>、1201、1301、1302</p>
         <p class="rooms"><span class="label">未售 1 套：</span>301（开发商持有，不在统计内）</p>
       </section>
 
       <section class="zone" aria-label="1单元高区">
         <div class="zone-head">
           <h2>1 单元 · 高区<span class="floors">14–26 楼</span></h2>
-          <div class="count">0<span class="of"> / 26 户</span></div>
+          <div class="count">6<span class="of"> / 26 户</span></div>
         </div>
-        <p class="stats">已报暖 <span class="pct">0%</span> · 达标需 13 户 · <span class="gap">还差 13 户</span></p>
+        <p class="stats">已报暖 <span class="pct">23.1%</span> · 达标需 13 户 · <span class="gap">还差 7 户</span></p>
         <div class="bar-zone">
-          <div class="bar" role="img" aria-label="1单元高区报暖0户，共26户，占0%，未售2套占7.7%，达标线50%">
-            <div class="ext" style="left:0;width:7.7%"></div>
+          <div class="bar" role="img" aria-label="1单元高区报暖6户，共26户，占23.1%，未售2套占7.7%，加上未售合计30.8%，达标线50%">
+            <div class="fill" style="width:23.1%"></div>
+            <div class="ext" style="left:23.1%;width:7.7%"></div>
             <div class="target-line"></div>
             <div class="target-tag">达标线 50%</div>
           </div>
         </div>
-        <p class="bar-note">斜纹段：未售 2 套，(0＋2) / 26 ＝ 7.7%</p>
-        <p class="rooms"><span class="label">报暖房号：</span>暂无</p>
+        <p class="bar-note">斜纹段：未售 2 套，(6＋2) / 26 ＝ 30.8%</p>
+        <p class="rooms"><span class="label">报暖房号：</span>1401<span class="todo">（房号待确认，原填 5011401）</span>、1901、2101、2102、2201、2302<span class="todo">（房号待确认，原填 512302）</span></p>
         <p class="rooms"><span class="label">未售 2 套：</span>2402、2602（开发商持有，不在统计内）</p>
       </section>
 
@@ -1697,8 +1713,8 @@
 
       <section class="summary" aria-label="全楼汇总">
         <div>
-          <div class="big">19<span class="unit"> 户已报暖</span></div>
-          <div class="cap">全楼已统计：1 单元 1 户 ＋ 2 单元 18 户</div>
+          <div class="big">29<span class="unit"> 户已报暖</span></div>
+          <div class="cap">全楼已统计：1 单元 11 户 ＋ 2 单元 18 户</div>
         </div>
         <div>
           <div class="big">16<span class="unit"> 套未售</span></div>
