@@ -201,6 +201,12 @@
         border-color: var(--dev);
         color: var(--panel);
       }
+      .cell.noheat {
+        background: #e7ebf0;
+        border-color: #d3dae2;
+        color: var(--ink-3);
+        opacity: .55;
+      }
       .cell .you {
         position: absolute;
         top: -7px;
@@ -246,6 +252,7 @@
         white-space: nowrap;
       }
       .sw-pass { background: var(--pass-tint); border-color: var(--pass); }
+      .sw-noheat { background: #e7ebf0; border-color: #d3dae2; opacity: .55; }
       .block-bg {
         position: absolute;
         grid-column: 6 / 8;
@@ -1205,9 +1212,10 @@
           <span class="item"><span class="sw sw-hot"></span>已报暖</span>
           <span class="item"><span class="sw sw-dev"></span>未售 · 开发商</span>
           <span class="item"><span class="sw sw-idle"></span>已售未报</span>
+          <span class="item"><span class="sw sw-noheat"></span>不要供暖</span>
           <span class="item"><span class="sw sw-pass"></span>已达标区块（实报 ≥50%）</span>
         </div>
-        <div class="board" role="img" aria-label="5号楼全景格子图：橙红色为已报暖共31户，蓝色为未售开发商持有共16套，浅灰为已售未报">
+        <div class="board" role="img" aria-label="5号楼全景格子图：橙红色为已报暖共31户，蓝色为未售开发商持有共16套，浅灰为已售未报，虚化淡色为登记不要供暖共2户">
           <div></div><div></div>
           <div class="b-unit" style="grid-column:3/5">1 单元</div>
           <div></div>
@@ -1299,7 +1307,7 @@
           <div class="cell hot">1301</div>
           <div class="cell hot">1302</div>
           <div></div>
-          <div class="cell">1301</div>
+          <div class="cell noheat">1301</div>
           <div class="cell hot">1302</div>
           <div class="b-floor">12</div>
           <div class="cell hot">1201</div>
@@ -1333,7 +1341,7 @@
           <div class="cell hot">802</div>
           <div class="b-floor">7</div>
           <div class="cell">701</div>
-          <div class="cell">702</div>
+          <div class="cell noheat">702</div>
           <div></div>
           <div class="cell">701</div>
           <div class="cell">702</div>
@@ -1363,7 +1371,6 @@
           <div class="cell hot">302</div>
           <div class="block-bg" aria-hidden="true"><span class="pass-tag">已达标</span></div>
         </div>
-        <p class="board-note">注：2 单元 1301 与 1 单元 702 登记不要供暖，只登记、不计入报暖数，格子图上不标已报暖。</p>
       </section>
 
       <section class="zone" aria-label="2单元低区">
