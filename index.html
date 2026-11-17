@@ -54,6 +54,22 @@
         font-size: 12px;
         margin: 0 0 16px;
         font-variant-numeric: tabular-nums;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .update-badge {
+        display: inline-block;
+        background: var(--main);
+        color: #fff;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 1;
+        padding: 5px 10px;
+        border-radius: 999px;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
       }
       /* 结论条 */
       .verdict {
@@ -500,7 +516,7 @@
   <body>
     <main class="wrap">
       <h1>东宸府供暖统计结果</h1>
-      <p class="meta">截至 2026-11-17 21:26</p>
+      <p class="meta">截至 2026-11-17 21:26 <span class="update-badge">每小时更新一次</span></p>
 
       <nav class="toc" aria-label="六栋目录">
         <h2>全小区六栋都在这页 · 点楼号直达</h2>
