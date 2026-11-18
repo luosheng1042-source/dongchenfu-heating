@@ -7,7 +7,155 @@
     <meta name="theme-color" content="#c5290e" />
     <link rel="icon" href="data:," />
     <title>东宸府供暖统计结果</title>
-    <style>
+    <script>(function(){var r=document.documentElement;r.classList.add("js");try{if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)r.classList.add("reduced");}catch(e){r.classList.add("reduced");}})();document.addEventListener("DOMContentLoaded",function(){
+(function(){
+  var root = document.documentElement;
+  var reduced = root.classList.contains("reduced");
+  function addClass(el, name){ if(el) el.classList.add(name); }
+  function setupSticky(){
+    var toc = document.querySelector(".toc");
+    if(!toc) return;
+    var sent = document.createElement("div");
+    sent.className = "toc-sentinel";
+    sent.setAttribute("aria-hidden", "true");
+    toc.parentNode.insertBefore(sent, toc);
+    var spacer = document.createElement("div");
+    spacer.className = "toc-spacer";
+    spacer.setAttribute("aria-hidden", "true");
+    var stuck = false;
+    function setStuck(v){
+      if(v === stuck) return;
+      stuck = v;
+      if(v){
+        spacer.style.height = toc.offsetHeight + "px";
+        if(toc.nextSibling !== spacer) toc.parentNode.insertBefore(spacer, toc.nextSibling);
+        addClass(toc, "is-stuck");
+      } else {
+        toc.classList.remove("is-stuck");
+        if(spacer.parentNode) spacer.parentNode.removeChild(spacer);
+      }
+    }
+    if(!("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function(ents){
+      setStuck(!ents[0].isIntersecting);
+    }, {threshold: 0, rootMargin: "-1px 0px 0px 0px"});
+    io.observe(sent);
+  }
+  function setupSmoothScroll(){
+    var links = document.querySelectorAll('.toc-grid a[href^="#"]');
+    for(var i=0;i<links.length;i++){
+      links[i].addEventListener("click", function(e){
+        var id = this.getAttribute("href").slice(1);
+        var el = document.getElementById(id);
+        if(!el) return;
+        e.preventDefault();
+        var bar = document.querySelector(".toc.is-stuck");
+        var offset = bar ? (bar.offsetHeight + 10) : 72;
+        var top = el.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) - offset;
+        window.scrollTo({top: Math.max(0, top), behavior: reduced ? "auto" : "smooth"});
+        if(history.replaceState) try{ history.replaceState(null, "", "#" + id); }catch(err){}
+      });
+    }
+  }
+  function parseAndCount(node, duration){
+    if(!node || node.nodeType !== 3) return;
+    var original = node.nodeValue;
+    var m = original.match(/^(\s*)(\d+(?:\.\d+)?)(.*)$/);
+    if(!m) return;
+    var target = parseFloat(m[2]);
+    if(!(target > 0)) return;
+    var decimals = (m[2].split(".")[1] || "").length;
+    var start = performance.now();
+    function frame(now){
+      var t = Math.min(1, (now - start) / duration);
+      var eased = 1 - Math.pow(1 - t, 3);
+      var val = target * eased;
+      node.nodeValue = m[1] + val.toFixed(decimals) + m[3];
+      if(t < 1) requestAnimationFrame(frame);
+      else node.nodeValue = original;
+    }
+    node.nodeValue = m[1] + (0).toFixed(decimals) + m[3];
+    requestAnimationFrame(frame);
+  }
+  function countInside(el){
+    if(reduced || !el) return;
+    var nodes = el.querySelectorAll(".count, .pct, .big");
+    for(var i=0;i<nodes.length;i++){
+      var n = nodes[i];
+      var first = n.firstChild;
+      if(first && first.nodeType === 3) parseAndCount(first, 900);
+    }
+  }
+  function classify(){
+    var zones = document.querySelectorAll("section.zone");
+    for(var i=0;i<zones.length;i++){
+      var z = zones[i];
+      var fill = z.querySelector(".fill");
+      var gap = z.querySelector(".gap");
+      if(fill) addClass(z, "has-data");
+      else addClass(z, "is-zero");
+      if(gap && /已达标/.test(gap.textContent || "")) addClass(z, "is-pass");
+    }
+    var boards = document.querySelectorAll(".board");
+    for(var b=0;b<boards.length;b++){
+      var board = boards[b];
+      var cells = board.querySelectorAll(".cell");
+      var n = cells.length;
+      for(var c=0;c<n;c++){
+        var delay = n <= 1 ? 0 : (c / (n - 1)) * 0.7;
+        cells[c].style.setProperty("--d", delay.toFixed(3) + "s");
+      }
+      if(board.querySelector(".cell.hot")){
+        var pan = board.closest(".panorama");
+        if(pan) addClass(pan, "has-hot");
+      }
+    }
+  }
+  function revealAll(){
+    root.classList.add("anim-done");
+    var all = document.querySelectorAll(".toc, .community, .panorama, .zone, .summary, .board");
+    for(var i=0;i<all.length;i++) addClass(all[i], "is-in");
+    for(var j=0;j<all.length;j++) if(all[j].classList.contains("board")) addClass(all[j], "is-lit");
+  }
+  try {
+    setupSticky();
+    setupSmoothScroll();
+    if(reduced){
+      revealAll();
+      return;
+    }
+    classify();
+    var failSafe = setTimeout(revealAll, 2500);
+    var io = null;
+    if("IntersectionObserver" in window){
+      io = new IntersectionObserver(function(entries){
+        for(var i=0;i<entries.length;i++){
+          var en = entries[i];
+          if(!en.isIntersecting) continue;
+          var t = en.target;
+          addClass(t, "is-in");
+          if(t.classList.contains("panorama")){
+            var board = t.querySelector(".board");
+            if(board) addClass(board, "is-lit");
+          }
+          countInside(t);
+          io.unobserve(t);
+        }
+      }, {threshold: 0.12, rootMargin: "0px 0px -6% 0px"});
+      var targets = document.querySelectorAll(".toc, .community, .panorama, .zone, .summary");
+      for(var i=0;i<targets.length;i++) io.observe(targets[i]);
+    } else {
+      revealAll();
+    }
+    window.addEventListener("load", function(){
+      clearTimeout(failSafe);
+      setTimeout(function(){ root.classList.add("anim-done"); }, 4000);
+    });
+  } catch(err){
+    revealAll();
+  }
+})();
+});</script><style>
       :root {
         --bg: #f2efe9;
         --bg-warm: #f7f5f1;
@@ -224,24 +372,13 @@
         transform: translateY(-2px);
         box-shadow: 0 8px 20px rgba(226, 58, 18, .12);
       }
-      .toc-grid a[href="#building-5"] {
+      .toc-grid a.is-active {
         background: linear-gradient(145deg, #e23a12 0%, #f0561a 48%, #ff7a33 100%);
         border-color: transparent;
         color: #fff;
         box-shadow: 0 8px 22px rgba(226, 58, 18, .38);
-        animation: hotTile 2.8s ease-in-out infinite;
       }
-      .toc-grid a[href="#building-5"] span { color: rgba(255, 255, 255, .88); }
-      .toc-grid a[href="#building-5"]:hover,
-      .toc-grid a[href="#building-5"]:focus {
-        color: #fff;
-        transform: translateY(-2px);
-        box-shadow: 0 10px 26px rgba(226, 58, 18, .48);
-      }
-      @keyframes hotTile {
-        0%, 100% { box-shadow: 0 8px 22px rgba(226, 58, 18, .38); }
-        50% { box-shadow: 0 8px 28px rgba(226, 58, 18, .55), 0 0 0 3px rgba(226, 58, 18, .16); }
-      }
+      .toc-grid a.is-active span { color: rgba(255, 255, 255, .88); }
       .toc.is-stuck {
         position: fixed;
         top: 0;
@@ -989,7 +1126,7 @@
   <body>
     <main class="wrap">
       <h1>东宸府供暖统计结果</h1>
-      <p class="meta">截至 2026-11-18 08:15 <span class="update-badge">每小时更新一次</span></p>
+      <p class="meta">截至 2026-11-18 08:19 <span class="update-badge">每小时更新一次</span></p>
 
       <nav class="toc" aria-label="六栋目录">
         <h2>全小区六栋都在这页 · 点楼号直达</h2>
@@ -2220,154 +2357,29 @@
       </section>
 
     </main>
-  <script>(function(){var r=document.documentElement;r.classList.add("js");try{if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)r.classList.add("reduced");}catch(e){r.classList.add("reduced");}})();document.addEventListener("DOMContentLoaded",function(){
-(function(){
-  var root = document.documentElement;
-  var reduced = root.classList.contains("reduced");
-  function addClass(el, name){ if(el) el.classList.add(name); }
-  function setupSticky(){
-    var toc = document.querySelector(".toc");
-    if(!toc) return;
-    var sent = document.createElement("div");
-    sent.className = "toc-sentinel";
-    sent.setAttribute("aria-hidden", "true");
-    toc.parentNode.insertBefore(sent, toc);
-    var spacer = document.createElement("div");
-    spacer.className = "toc-spacer";
-    spacer.setAttribute("aria-hidden", "true");
-    var stuck = false;
-    function setStuck(v){
-      if(v === stuck) return;
-      stuck = v;
-      if(v){
-        spacer.style.height = toc.offsetHeight + "px";
-        if(toc.nextSibling !== spacer) toc.parentNode.insertBefore(spacer, toc.nextSibling);
-        addClass(toc, "is-stuck");
-      } else {
-        toc.classList.remove("is-stuck");
-        if(spacer.parentNode) spacer.parentNode.removeChild(spacer);
-      }
-    }
-    if(!("IntersectionObserver" in window)) return;
-    var io = new IntersectionObserver(function(ents){
-      setStuck(!ents[0].isIntersecting);
-    }, {threshold: 0, rootMargin: "-1px 0px 0px 0px"});
-    io.observe(sent);
-  }
-  function setupSmoothScroll(){
-    var links = document.querySelectorAll('.toc-grid a[href^="#"]');
-    for(var i=0;i<links.length;i++){
-      links[i].addEventListener("click", function(e){
-        var id = this.getAttribute("href").slice(1);
-        var el = document.getElementById(id);
-        if(!el) return;
-        e.preventDefault();
-        var bar = document.querySelector(".toc.is-stuck");
-        var offset = bar ? (bar.offsetHeight + 10) : 72;
-        var top = el.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) - offset;
-        window.scrollTo({top: Math.max(0, top), behavior: reduced ? "auto" : "smooth"});
-        if(history.replaceState) try{ history.replaceState(null, "", "#" + id); }catch(err){}
-      });
-    }
-  }
-  function parseAndCount(node, duration){
-    if(!node || node.nodeType !== 3) return;
-    var original = node.nodeValue;
-    var m = original.match(/^(\s*)(\d+(?:\.\d+)?)(.*)$/);
-    if(!m) return;
-    var target = parseFloat(m[2]);
-    if(!(target > 0)) return;
-    var decimals = (m[2].split(".")[1] || "").length;
-    var start = performance.now();
-    function frame(now){
-      var t = Math.min(1, (now - start) / duration);
-      var eased = 1 - Math.pow(1 - t, 3);
-      var val = target * eased;
-      node.nodeValue = m[1] + val.toFixed(decimals) + m[3];
-      if(t < 1) requestAnimationFrame(frame);
-      else node.nodeValue = original;
-    }
-    node.nodeValue = m[1] + (0).toFixed(decimals) + m[3];
-    requestAnimationFrame(frame);
-  }
-  function countInside(el){
-    if(reduced || !el) return;
-    var nodes = el.querySelectorAll(".count, .pct, .big");
-    for(var i=0;i<nodes.length;i++){
-      var n = nodes[i];
-      var first = n.firstChild;
-      if(first && first.nodeType === 3) parseAndCount(first, 900);
-    }
-  }
-  function classify(){
-    var zones = document.querySelectorAll("section.zone");
-    for(var i=0;i<zones.length;i++){
-      var z = zones[i];
-      var fill = z.querySelector(".fill");
-      var gap = z.querySelector(".gap");
-      if(fill) addClass(z, "has-data");
-      else addClass(z, "is-zero");
-      if(gap && /已达标/.test(gap.textContent || "")) addClass(z, "is-pass");
-    }
-    var boards = document.querySelectorAll(".board");
-    for(var b=0;b<boards.length;b++){
-      var board = boards[b];
-      var cells = board.querySelectorAll(".cell");
-      var n = cells.length;
-      for(var c=0;c<n;c++){
-        var delay = n <= 1 ? 0 : (c / (n - 1)) * 0.7;
-        cells[c].style.setProperty("--d", delay.toFixed(3) + "s");
-      }
-      if(board.querySelector(".cell.hot")){
-        var pan = board.closest(".panorama");
-        if(pan) addClass(pan, "has-hot");
-      }
-    }
-  }
-  function revealAll(){
-    root.classList.add("anim-done");
-    var all = document.querySelectorAll(".toc, .community, .panorama, .zone, .summary, .board");
-    for(var i=0;i<all.length;i++) addClass(all[i], "is-in");
-    for(var j=0;j<all.length;j++) if(all[j].classList.contains("board")) addClass(all[j], "is-lit");
-  }
-  try {
-    setupSticky();
-    setupSmoothScroll();
-    if(reduced){
-      revealAll();
-      return;
-    }
-    classify();
-    var failSafe = setTimeout(revealAll, 2500);
-    var io = null;
-    if("IntersectionObserver" in window){
-      io = new IntersectionObserver(function(entries){
-        for(var i=0;i<entries.length;i++){
-          var en = entries[i];
-          if(!en.isIntersecting) continue;
-          var t = en.target;
-          addClass(t, "is-in");
-          if(t.classList.contains("panorama")){
-            var board = t.querySelector(".board");
-            if(board) addClass(board, "is-lit");
-          }
-          countInside(t);
-          io.unobserve(t);
-        }
-      }, {threshold: 0.12, rootMargin: "0px 0px -6% 0px"});
-      var targets = document.querySelectorAll(".toc, .community, .panorama, .zone, .summary");
-      for(var i=0;i<targets.length;i++) io.observe(targets[i]);
-    } else {
-      revealAll();
-    }
-    window.addEventListener("load", function(){
-      clearTimeout(failSafe);
-      setTimeout(function(){ root.classList.add("anim-done"); }, 4000);
+  <script>
+(function () {
+  var links = document.querySelectorAll('.toc-grid a[href^="#building-"]');
+  if (!links.length) return;
+  function setActive(id) {
+    links.forEach(function (a) {
+      a.classList.toggle('is-active', a.getAttribute('href') === '#' + id);
     });
-  } catch(err){
-    revealAll();
   }
+  links.forEach(function (a) {
+    a.addEventListener('click', function () { setActive(a.getAttribute('href').slice(1)); });
+  });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) setActive(en.target.id); });
+    }, { rootMargin: '-25% 0px -60% 0px', threshold: 0 });
+    links.forEach(function (a) {
+      var el = document.getElementById(a.getAttribute('href').slice(1));
+      if (el) io.observe(el);
+    });
+  }
+  if (location.hash) setActive(location.hash.slice(1));
 })();
-});</script>
+</script>
 </body>
 </html>
